@@ -1,0 +1,20 @@
+
+{% block content %}
+
+
+    <h1>Crear Estudiante</h1>
+
+    <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Guardar</button>
+    </form>
+
+    {% if form.errors %}
+          <div class="errors">
+            {{ form.errors }}
+          </div>
+    {% endif %}
+
+
+{% endblock %}

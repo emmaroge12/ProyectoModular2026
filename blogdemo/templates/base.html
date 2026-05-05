@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>{% block title %}Sistema Escolar{% endblock %}</title>
+
+    <!-- Favicon (pon tu logo en static/img/favicon.ico) -->
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+
+    <!-- Fuentes: Syne (títulos) + DM Sans (cuerpo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Syne:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans:    ['DM Sans', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        udg: {
+                            DEFAULT: '#004a99',
+                            light:   '#E6EFF9',
+                            dark:    '#003270',
+                        },
+                        accent: {
+                            DEFAULT: '#1D9E75',
+                            light:   '#E1F5EE',
+                            mid:     '#0F6E56',
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- Alpine.js (versión fija, no flotante) -->
+    <script defer src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
+
+    <style>
+        /* Transición suave en swaps de HTMX */
+        .htmx-swapping { opacity: 0; transition: opacity .15s ease-out; }
+
+        /* Scrollbar discreta */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #D3D1C7; border-radius: 99px; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+    {% block body %}
+
+
+
+    {% endblock %}
+
+    <!-- CSRF para peticiones HTMX -->
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

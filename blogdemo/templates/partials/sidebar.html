@@ -1,0 +1,126 @@
+<!-- templates/partials/sidebar.html -->
+<aside class="w-52 bg-slate-900 text-slate-300 flex-shrink-0 hidden md:flex flex-col shadow-xl">
+
+    <!-- Logo y Cabecera del Sidebar -->
+    <div class="px-6 py-8 flex flex-col gap-4 bg-slate-950/40 border-b border-slate-800/50 flex-shrink-0">
+        <a href="/" class="flex items-center gap-3.5 group">
+            <!-- Contenedor del Isotipo -->
+            <div class="w-11 h-11 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0
+                        shadow-xl shadow-indigo-500/20 group-hover:bg-indigo-500 transition-all duration-300">
+                <span class="text-white font-black text-xl tracking-tighter">U</span>
+            </div>
+
+            <!-- Texto del Logo -->
+            <div class="flex flex-col justify-center">
+                <h1 class="text-white font-bold tracking-tight text-lg leading-none">
+                    UDG<span class="text-indigo-400 font-extrabold">Admin</span>
+                </h1>
+                <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-bold mt-1.5">
+                    Sistema Escolar
+                </p>
+            </div>
+        </a>
+    </div>
+
+   <!-- Navegación -->
+    <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+
+        <!-- Estudiantes -->
+        <a href="#"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group
+                  {% if request.resolver_match.url_name == 'students_list' %}
+                    bg-indigo-600 text-white shadow-md shadow-indigo-500/20
+                  {% else %}
+                    text-slate-400 hover:bg-slate-800 hover:text-white
+                  {% endif %}">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M2.5 13c0-2.5 2.5-4.5 5.5-4.5s5.5 2 5.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span>Estudiantes</span>
+        </a>
+
+        <!-- Profesores -->
+        <a href="#"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group
+                  {% if request.resolver_match.url_name == 'teachers_list' %}
+                    bg-indigo-600 text-white shadow-md shadow-indigo-500/20
+                  {% else %}
+                    text-slate-400 hover:bg-slate-800 hover:text-white
+                  {% endif %}">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="2" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M5 13h6M8 11v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span>Profesores</span>
+        </a>
+
+        <!-- Becas -->
+        <a href="#"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group
+                  {% if request.resolver_match.url_name == 'becas_list' %}
+                    bg-indigo-600 text-white shadow-md shadow-indigo-500/20
+                  {% else %}
+                    text-slate-400 hover:bg-slate-800 hover:text-white
+                  {% endif %}">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1.5l1.8 3.6 4 .6-2.9 2.8.7 4L8 10.4l-3.6 2.1.7-4L2.2 5.7l4-.6L8 1.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+            <span>Becas</span>
+        </a>
+
+        <!-- Tesis -->
+        <a href="#"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group
+                  {% if request.resolver_match.url_name == 'tesis_list' %}
+                    bg-indigo-600 text-white shadow-md shadow-indigo-500/20
+                  {% else %}
+                    text-slate-400 hover:bg-slate-800 hover:text-white
+                  {% endif %}">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                <rect x="3" y="1.5" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M6 5.5h4M6 8h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span>Tesis</span>
+        </a>
+
+    </nav>
+
+    <!-- Footer: Usuario + Copyright -->
+    <div class="mt-auto flex-shrink-0 p-4 bg-slate-950/80 border-t border-slate-800">
+
+        <!-- Perfil de Usuario (Opcional pero recomendado) -->
+        <div class="flex items-center gap-3 p-2 mb-4 bg-slate-900/50 rounded-xl border border-slate-800/50">
+            <!-- Avatar con iniciales -->
+            <div class="w-9 h-9 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold text-sm flex-shrink-0">
+                JD
+            </div>
+
+            <!-- Nombre y Rol -->
+            <div class="flex flex-col min-w-0 overflow-hidden">
+                <span class="text-white text-xs font-semibold truncate">Juan Domínguez</span>
+                <span class="text-slate-500 text-[10px] truncate">Administrador</span>
+            </div>
+
+            <!-- Botón Salir (Icono) -->
+            <a href="#" title="Cerrar Sesión" class="ml-auto text-slate-500 hover:text-red-400 transition-colors p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </a>
+    </div>
+
+    <!-- Copyright y Versión -->
+    <div class="flex flex-col gap-1 text-center">
+            <p class="text-[10px] text-slate-500 font-medium tracking-wide">
+                © 2026 <span class="text-indigo-400/80">Sistema Escolar UDG</span>
+            </p>
+            <div class="flex items-center justify-center gap-2">
+                <span class="h-[1px] w-4 bg-slate-800"></span>
+                <p class="text-[9px] text-slate-600 uppercase tracking-[0.2em]">v2.1.0</p>
+                <span class="h-[1px] w-4 bg-slate-800"></span>
+            </div>
+        </div>
+    </div>
+
+</aside>

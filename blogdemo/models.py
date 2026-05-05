@@ -65,7 +65,7 @@ class StudentTutor(models.Model):
     professor = models.ForeignKey(Professor, on_delete=models.PROTECT)
     role = models.CharField(
         max_length=10,
-        choices=[ ("TUTOR1", "Tutor 1"),  ("TUTOR2", "Tutor 2"), ("TUTOR3", "Tutor 3")]
+        choices=[ ("TUTOR1", "Tutor 1"),  ("TUTOR2", "Tutor 2"), ("TUTOR3", "Tutor 3")]  # (value in db, text in form)
     )
 
     class Meta:
@@ -85,7 +85,7 @@ class ConacytScholarship(models.Model):
     start_date = models.DateField(blank=True, verbose_name="Fecha de inicio")
     end_date = models.DateField(blank=True, verbose_name="Fecha de finalización")
     status = models.CharField(max_length=10, verbose_name="Estatus", choices=[
-            ("ACTIVA", "Activa"),
+            ("ACTIVA", "Activa"), #(db value, text in form)
             ("BAJA", "Baja"),
             ("SIN BECA", "Sin Beca"),
         ]
@@ -94,7 +94,7 @@ class ConacytScholarship(models.Model):
 
     student = models.OneToOneField(
         Student,
-        on_delete=models.CASCADE,   # if you delete sudent, also the scholarshop is gone
+        on_delete=models.CASCADE,   # if you delete student, also the scholarshop is gone
         related_name="scholarship"  # access from Student
     )
 
