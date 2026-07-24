@@ -26,9 +26,9 @@
     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
 
         <!-- Estudiantes -->
-        <a href="#"
+        <a href="{% url 'student-list' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group
-                  {% if request.resolver_match.url_name == 'students_list' %}
+                  {% if request.resolver_match.url_name == 'student-list' %}
                     bg-indigo-600 text-white shadow-md shadow-indigo-500/20
                   {% else %}
                     text-slate-400 hover:bg-slate-800 hover:text-white

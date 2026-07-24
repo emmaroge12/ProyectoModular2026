@@ -7,14 +7,37 @@ from .forms import StudentForm
 
 
 class StudentListView(ListView):
-
-    """This view wiill be in charge of displaying the list of students in the student table at the dashboard
-    this class access to the DB student entity and displays the student data with a for-loop from the HTML template"""
-
+    """
+    This view handles displaying the list of students at the dashboard.
+    It adapts dynamically to HTMX requests to filter rows efficiently.
+    """
     model = Student
-    template_name = "students/students_dashboard.html"   # el template que usaremos
     context_object_name = "students"
 
+    # This acts as our fallback/default template
+    template_name = "partials/students_table.html"
+
+    def get_template_names(self):
+        # If HTMX is requesting data, only return the raw rows partial
+        if self.request.headers.get('HX-Request'):
+            return ['partials/student_rows.html']
+        # Otherwise, render the whole dashboard table template
+        return [self.template_name]
+
+    def get_queryset(self):
+        # Start with all students
+        queryset = super().get_queryset()
+
+        # Get the HTMX parameters from the URL
+        filter_by = self.request.GET.get('filter_by', 'name')
+        search_text = self.request.GET.get('search_text', '').strip()
+
+        # If the user typed something, filter the database
+        if search_text:
+            filter_rule = f"{filter_by}__icontains"
+            queryset = queryset.filter(**{filter_rule: search_text})
+
+        return queryset
 
 class StudentCreateView(CreateView):
 
@@ -26,7 +49,7 @@ class StudentCreateView(CreateView):
 
     model = Student
     form_class = StudentForm
-    template_name = "students/partials/add_form_student.html"
+    template_name = "partials/add_student_form.html"
     context_object_name = 'form'
     success_url = reverse_lazy("student-list")  # Redirige a la lista de estudiantes al guardar
 
