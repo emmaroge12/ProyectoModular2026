@@ -125,3 +125,10 @@ STATIC_ROOT = BASE_DIR / "staticfiles"     # Carpeta donde se recopilan en produ
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"            # Carpeta para archivos subidos
+
+
+# Redirect here on successful login
+LOGIN_REDIRECT_URL = 'student-list'  # Route name of your dashboard view
+
+# Redirect here if an unauthenticated user tries to access a protected page
+LOGIN_URL = 'login'

@@ -1,0 +1,201 @@
+    <!-- templates/partials/student_form_modal.html -->
+<div x-data="{ isSaving: false }" 
+     class="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-3xl mx-4 max-h-[90vh] flex flex-col">
+    
+    <!-- HEADER DEL MODAL -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+        <div class="flex items-center gap-2">
+            <!-- Left accent color indicator -->
+            <span class="w-1.5 h-3.5 bg-indigo-600 rounded-full"></span>
+            <h3 class="font-bold text-gray-900 text-base">Registrar Nuevo Estudiante</h3>
+        </div>
+        <!-- Close window cross trigger -->
+        <button type="button" 
+                @click="isOpenAdd = false" 
+                class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- HTMX FORM INTERFACE CONTAINER -->
+    <!-- Note: 'novalidate' ensures our clean Spanish text errors display exclusively -->
+    <form hx-post="/students/create/" 
+          hx-target="#student-form-container" 
+          @submit="isSaving = true"
+          class="flex flex-col flex-1 overflow-hidden" 
+          novalidate>
+        {% csrf_token %}
+
+        <!-- CUERPO DEL FORMULARIO (Scrollable area) -->
+        <div class="px-6 py-6 space-y-6 overflow-y-auto flex-1 bg-gray-50/30">
+            
+            <!-- BANNER GLOBAL: Para errores cruzados (ej. tutores duplicados) -->
+            {% if form.non_field_errors %}
+                <div class="p-3 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg shadow-sm animate-fade-in">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- SECCIÓN 1: DATOS GENERALES Y DE CONTACTO -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-1 border-b border-gray-100">
+                    <span class="w-1 h-2.5 bg-indigo-500 rounded-full"></span>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Identificación y Contacto</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Código UDG -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Código UDG</label>
+                        <input type="text" name="udg_code" value="{{ form.udg_code.value|default:'' }}" 
+                               class="w-full px-3 py-1.5 text-xs border {% if form.udg_code.errors %}border-red-300 bg-red-50/30 focus:ring-red-500/20{% else %}border-gray-200 focus:ring-indigo-500/20{% endif %} rounded-lg focus:outline-none focus:ring-2">
+                        {% if form.udg_code.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.udg_code.errors.0 }}</p>{% endif %}
+                    </div>
+                    
+                    <!-- Nombre Completo -->
+                    <div class="md:col-span-2 space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nombre Completo</label>
+                        <input type="text" name="name" value="{{ form.name.value|default:'' }}" 
+                               class="w-full px-3 py-1.5 text-xs border {% if form.name.errors %}border-red-300 bg-red-50/30 focus:ring-red-500/20{% else %}border-gray-200 focus:ring-indigo-500/20{% endif %} rounded-lg focus:outline-none focus:ring-2">
+                        {% if form.name.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.name.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Correo UDG -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Correo UDG</label>
+                        <input type="email" name="udg_email" value="{{ form.udg_email.value|default:'' }}" 
+                               class="w-full px-3 py-1.5 text-xs border {% if form.udg_email.errors %}border-red-300 bg-red-50/30 focus:ring-red-500/20{% else %}border-gray-200 focus:ring-indigo-500/20{% endif %} rounded-lg focus:outline-none focus:ring-2">
+                        {% if form.udg_email.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.udg_email.errors.0 }}</p>{% endif %}
+                    </div>
+                    
+                    <!-- Teléfono -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Teléfono Movil</label>
+                        <input type="text" name="phone" value="{{ form.phone.value|default:'' }}" 
+                               class="w-full px-3 py-1.5 text-xs border {% if form.phone.errors %}border-red-300 bg-red-50/30 focus:ring-red-500/20{% else %}border-gray-200 focus:ring-indigo-500/20{% endif %} rounded-lg focus:outline-none focus:ring-2">
+                        {% if form.phone.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.phone.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: TRAYECTORIA ACADÉMICA Y TRABAJO -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-1 border-b border-gray-100">
+                    <span class="w-1 h-2.5 bg-amber-500 rounded-full"></span>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Estatus Académico y Laboral</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Semestre -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Semestre en Curso</label>
+                        <input type="number" name="current_semester" value="{{ form.current_semester.value|default:0 }}" 
+                               class="w-full px-3 py-1.5 text-xs border {% if form.current_semester.errors %}border-red-300 bg-red-50/30 focus:ring-red-500/20{% else %}border-gray-200 focus:ring-indigo-500/20{% endif %} rounded-lg focus:outline-none focus:ring-2">
+                        {% if form.current_semester.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.current_semester.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <!-- Año Admisión -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Año de Admisión</label>
+                        <input type="number" name="admission_year" value="{{ form.admission_year.value|default:0 }}" 
+                               class="w-full px-3 py-1.5 text-xs border {% if form.admission_year.errors %}border-red-300 bg-red-50/30 focus:ring-red-500/20{% else %}border-gray-200 focus:ring-indigo-500/20{% endif %} rounded-lg focus:outline-none focus:ring-2">
+                        {% if form.admission_year.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.admission_year.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <!-- Calendario -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Calendario</label>
+                        <select name="udg_calendar" class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
+                            {% for value, text in form.fields.udg_calendar.choices %}
+                                <option value="{{ value }}" {% if form.udg_calendar.value == value %}selected{% endif %}>{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Situación -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Situación Activa</label>
+                        <select name="situation" class="w-full px-3 py-1.5 text-xs border {% if form.situation.errors %}border-red-300{% else %}border-gray-200{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
+                            {% for value, text in form.fields.situation.choices %}
+                                <option value="{{ value }}" {% if form.situation.value == value %}selected{% endif %}>{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if form.situation.errors %}<p class="text-[10px] text-red-600 font-medium mt-0.5">{{ form.situation.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Último empleo -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Último Lugar de Trabajo</label>
+                    <textarea name="last_job" rows="2" placeholder="Empresa o Institución..." 
+                              class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20">{{ form.last_job.value|default:'' }}</textarea>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: ASIGNACIÓN DE TUTORES -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-1 border-b border-gray-100">
+                    <span class="w-1 h-2.5 bg-emerald-500 rounded-full"></span>
+                    <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Cuerpo de Tutores Asignados</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Tutor 1 -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Tutor 1 (Principal)</label>
+                        <select name="tutor1" class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            {% for choice in form.fields.tutor1.choices %}
+                                <option value="{{ choice.0 }}" {% if form.tutor1.value|slugify == choice.0|slugify %}selected{% endif %}>{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Tutor 2 -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Tutor 2</label>
+                        <select name="tutor2" class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            {% for choice in form.fields.tutor2.choices %}
+                                <option value="{{ choice.0 }}" {% if form.tutor2.value|slugify == choice.0|slugify %}selected{% endif %}>{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Tutor 3 -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Tutor 3</label>
+                        <select name="tutor3" class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            {% for choice in form.fields.tutor3.choices %}
+                                <option value="{{ choice.0 }}" {% if form.tutor3.value|slugify == choice.0|slugify %}selected{% endif %}>{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PIE DEL MODAL: ACCIONES -->
+        <div class="px-6 py-3.5 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2 flex-shrink-0">
+            <!-- Cancel trigger updates Alpine component visibility states -->
+            <button type="button" 
+                    @click="isOpenAdd = false" 
+                    class="px-4 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-100 rounded-lg transition-all cursor-pointer">
+                Cancelar
+            </button>
+            
+            <!-- Submit button triggers processing loader layout when saving -->
+            <button type="submit" 
+                    :disabled="isSaving"
+                    class="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 rounded-lg transition-all flex items-center gap-2 cursor-pointer">
+                <span x-show="isSaving" class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Guardar Registro
+            </button>
+        </div>
+    </form>
+</div>

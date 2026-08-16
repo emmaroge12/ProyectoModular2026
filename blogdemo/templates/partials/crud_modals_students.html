@@ -1,4 +1,211 @@
 <!-- ══════════════════════════════════
+     MODAL DE DETALLES DEL ESTUDIANTE
+══════════════════════════════════ -->
+<div x-data="detailModal()"
+     @open-detail-modal.window="open($event.detail)"
+     x-show="isOpen"
+     x-transition:enter="ease-out duration-200"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="ease-in duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+     style="display:none">
+
+    <!-- max-w-4xl is perfect for clear horizontal sections -->
+    <div @click.outside="isOpen = false"
+         x-transition:enter="ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         class="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-4xl mx-4 max-h-[85vh] flex flex-col">
+
+        <!-- Header del Modal -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center
+                            text-base font-bold text-indigo-600 flex-shrink-0"
+                     x-text="initials"></div>
+                <div>
+                    <h3 class="font-bold text-gray-900 text-base" x-text="student.name"></h3>
+                    <p class="text-xs text-gray-400 font-mono" x-text="'Código UDG: ' + student.code"></p>
+                </div>
+            </div>
+            <button @click="isOpen = false"
+                    class="text-gray-400 hover:text-gray-600 transition p-1 rounded-lg hover:bg-gray-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Cuerpo del Modal (Scrollable Section Stack) -->
+        <div class="px-6 py-6 space-y-6 overflow-y-auto flex-1 bg-gray-50/50">
+
+            <!-- SECTION 1: INFORMACIÓN GENERAL DEL ESTUDIANTE -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
+                    <span class="w-1.5 h-3.5 bg-indigo-600 rounded-full"></span>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Información del Estudiante</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">Correo UDG</p>
+                        <p class="text-xs font-medium text-gray-800 break-all" x-text="student.email || 'No registrado'"></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">Teléfono</p>
+                        <p class="text-xs font-medium text-gray-800" x-text="student.phone || 'No registrado'"></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">Trayectoria Académica</p>
+                        <p class="text-xs font-medium text-gray-800" x-text="student.semester + '° Semestre (' + student.admission_year + '-' + student.calendar + ')'"></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">Situación</p>
+                        <span class="inline-flex mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase"
+                              :class="{
+                                  'bg-green-100 text-green-800': student.situation === 'ACTIVO',
+                                  'bg-blue-100 text-blue-800': student.situation === 'GRADUADO',
+                                  'bg-red-100 text-red-800': student.situation === 'BAJA',
+                                  'bg-gray-100 text-gray-800': ['INACTIVO', 'DESCONOCIDO'].includes(student.situation)
+                              }"
+                              x-text="student.situation"></span>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg px-3 py-2.5 border border-dashed border-gray-200">
+                    <p class="text-[10px] text-gray-400 mb-0.5">Último Lugar de Trabajo</p>
+                    <p class="text-xs font-medium text-gray-700 whitespace-pre-line" x-text="student.last_job || 'Sin registro de empleo actual'"></p>
+                </div>
+            </div>
+
+            <!-- SECTION 2: ASIGNACIÓN DE TUTORES -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
+                    <span class="w-1.5 h-3.5 bg-emerald-600 rounded-full"></span>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Cuerpo de Tutores</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-emerald-50/40 border border-emerald-100 rounded-lg px-4 py-3">
+                        <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-1">Tutor 1 (Principal)</p>
+                        <p class="text-xs font-semibold text-gray-800" x-text="student.tutor1 || 'No asignado'"></p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Tutor 2</p>
+                        <p class="text-xs font-semibold text-gray-800" x-text="student.tutor2 || 'No asignado'"></p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Tutor 3</p>
+                        <p class="text-xs font-semibold text-gray-800" x-text="student.tutor3 || 'No asignado'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: INFORMACIÓN DE BECA CONACYT -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-3.5 bg-amber-500 rounded-full"></span>
+                        <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Información de Beca CONACYT</p>
+                    </div>
+                    <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full uppercase"
+                          :class="{
+                              'bg-amber-100 text-amber-800': student.scholarship_status === 'ACTIVA',
+                              'bg-red-100 text-red-800': student.scholarship_status === 'BAJA',
+                              'bg-gray-100 text-gray-600': !student.scholarship_id || student.scholarship_status === 'SIN BECA'
+                          }"
+                          x-text="student.scholarship_status || 'SIN BECA'"></span>
+                </div>
+
+                <!-- Display parameters when scholarship exists -->
+                <div x-show="student.scholarship_id" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">ID de Beca</p>
+                        <p class="text-xs font-mono font-medium text-gray-800" x-text="student.scholarship_id"></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">Fecha de Inicio</p>
+                        <p class="text-xs font-medium text-gray-800" x-text="student.scholarship_start"></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                        <p class="text-[10px] text-gray-400 mb-0.5">Fecha de Fin</p>
+                        <p class="text-xs font-medium text-gray-800" x-text="student.scholarship_end"></p>
+                    </div>
+                </div>
+
+                <!-- Fallback empty view -->
+                <div x-show="!student.scholarship_id" class="text-center py-2 text-xs text-gray-400 italic">
+                    Este estudiante no cuenta con un registro de beca CONACYT activo.
+                </div>
+            </div>
+
+            <!-- SECTION 4: PROTOCOLO DE TESIS -->
+            <div class="bg-white rounded-xl p-5 border border-gray-200/60 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
+                    <span class="w-1.5 h-3.5 bg-sky-500 rounded-full"></span>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Proyecto de Tesis</p>
+                </div>
+
+                <div x-show="student.thesis_title" class="space-y-4">
+                    <div class="bg-gray-50 rounded-lg p-3.5 border border-gray-100">
+                        <p class="text-[10px] text-gray-400 mb-1">Título de la Tesis</p>
+                        <p class="text-xs font-semibold text-gray-800 leading-relaxed" x-text="student.thesis_title"></p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                            <p class="text-[10px] text-gray-400 mb-0.5">LGCA Relacionada</p>
+                            <p class="text-xs font-medium text-gray-800" x-text="student.thesis_lgca"></p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                            <p class="text-[10px] text-gray-400 mb-0.5">Director de Tesis</p>
+                            <p class="text-xs font-medium text-indigo-600 font-semibold" x-text="student.thesis_director || 'No asignado'"></p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg px-3 py-2.5">
+                            <p class="text-[10px] text-gray-400 mb-0.5">Acta / Fecha de Graduación</p>
+                            <p class="text-xs font-mono font-medium text-gray-800"
+                               x-text="student.thesis_record ? 'Acta: ' + student.thesis_record : ('Graduación: ' + (student.thesis_grad_date || 'Pendiente'))"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fallback empty view -->
+                <div x-show="!student.thesis_title" class="text-center py-2 text-xs text-gray-400 italic">
+                    Sin protocolo de tesis registrado actualmente.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer del Modal -->
+        <div class="px-6 py-3.5 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2 flex-shrink-0">
+            <button type="button"
+                    class="mr-auto px-4 py-1.5 text-sm font-medium text-red-600 bg-white border border-red-200
+                           hover:bg-red-600 hover:text-white rounded-lg transition-all cursor-pointer"
+                    hx-confirm="¿Estás seguro de que deseas eliminar permanentemente a este estudiante y toda su información vinculada?"
+                    hx-target="#student-table-body"
+                    @click="isOpen = false"
+                    :hx-delete="'/students/' + student.code + '/delete/'">
+                Eliminar Alumno
+            </button>
+
+            <button @click="isOpen = false"
+                    class="px-4 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200
+                           hover:bg-gray-100 rounded-lg transition-all">
+                Cerrar
+            </button>
+
+            <a :href="editUrl"
+               class="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600
+                      hover:bg-indigo-700 rounded-lg transition-all">
+                Editar Datos
+            </a>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════
      MODAL DE CONFIRMACIÓN DE ELIMINACIÓN
 ══════════════════════════════════ -->
 <div x-data="deleteModal()"
@@ -54,121 +261,6 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     MODAL DE DETALLES DEL ESTUDIANTE
-══════════════════════════════════ -->
-<div x-data="detailModal()"
-     @open-detail-modal.window="open($event.detail)"
-     x-show="isOpen"
-     x-transition:enter="ease-out duration-200"
-     x-transition:enter-start="opacity-0"
-     x-transition:enter-end="opacity-100"
-     x-transition:leave="ease-in duration-150"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-     style="display:none">
-
-    <div @click.outside="isOpen = false"
-         x-transition:enter="ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         class="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-md mx-4">
-
-        <!-- Header del modal -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <div class="flex items-center gap-3">
-                <!-- Avatar con iniciales -->
-                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center
-                            text-sm font-bold text-indigo-600 flex-shrink-0"
-                     x-text="initials"></div>
-                <div>
-                    <p class="font-semibold text-gray-900 text-sm" x-text="student.name"></p>
-                    <p class="text-xs text-gray-400 font-mono" x-text="student.code"></p>
-                </div>
-            </div>
-            <button @click="isOpen = false"
-                    class="text-gray-400 hover:text-gray-600 transition p-1 rounded-lg hover:bg-gray-100">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Cuerpo del modal -->
-        <div class="px-6 py-4 space-y-4">
-
-            <!-- Información de contacto -->
-            <div>
-                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Contacto</p>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
-                        <p class="text-[10px] text-gray-400 mb-0.5">Correo UDG</p>
-                        <p class="text-xs font-medium text-gray-800 break-all" x-text="student.email"></p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
-                        <p class="text-[10px] text-gray-400 mb-0.5">Teléfono</p>
-                        <p class="text-xs font-medium text-gray-800" x-text="student.phone"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Información académica -->
-            <div>
-                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Académico</p>
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
-                        <p class="text-[10px] text-gray-400 mb-0.5">Semestre</p>
-                        <p class="text-xs font-medium text-gray-800" x-text="student.semester + '°'"></p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
-                        <p class="text-[10px] text-gray-400 mb-0.5">Admisión</p>
-                        <p class="text-xs font-medium text-gray-800" x-text="student.admission"></p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5">
-                        <p class="text-[10px] text-gray-400 mb-0.5">Situación</p>
-                        <p class="text-xs font-medium text-gray-800" x-text="student.situation"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Secciones futuras -->
-            <div>
-                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Relaciones</p>
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5 border border-dashed border-gray-200 text-center">
-                        <p class="text-[10px] text-gray-400">Tutor</p>
-                        <p class="text-xs text-gray-300 mt-0.5 italic">próximamente</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5 border border-dashed border-gray-200 text-center">
-                        <p class="text-[10px] text-gray-400">Beca</p>
-                        <p class="text-xs text-gray-300 mt-0.5 italic">próximamente</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg px-3 py-2.5 border border-dashed border-gray-200 text-center">
-                        <p class="text-[10px] text-gray-400">Tesis</p>
-                        <p class="text-xs text-gray-300 mt-0.5 italic">próximamente</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Footer del modal -->
-        <div class="px-6 py-3.5 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2">
-            <button @click="isOpen = false"
-                    class="px-4 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200
-                           hover:bg-gray-100 rounded-lg transition-all">
-                Cerrar
-            </button>
-            <a :href="editUrl"
-               class="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600
-                      hover:bg-indigo-700 rounded-lg transition-all">
-                Editar
-            </a>
-        </div>
-
-    </div>
-</div>
 
 <script>
 function detailModal() {
@@ -178,12 +270,16 @@ function detailModal() {
         initials: '',
         editUrl: '',
         open(detail) {
-            this.student  = detail;
-            this.editUrl  = `/students/${detail.id}/edit/`;
-            const parts   = detail.name.trim().split(' ');
+            this.student = detail;
+            this.editUrl = `/students/${detail.code}/edit/`;
+
+            // Safe initials string parser fallback
+            const name = detail.name || 'Estudiante';
+            const parts = name.trim().split(' ');
             this.initials = parts.length >= 2
                 ? parts[0][0].toUpperCase() + parts[1][0].toUpperCase()
                 : parts[0].slice(0, 2).toUpperCase();
+
             this.isOpen = true;
         }
     }
